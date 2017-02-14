@@ -1,0 +1,89 @@
+declare var KTKDevicesManager,
+			KTKDevicesManagerDelegate,
+			Kontakt;
+
+export interface Beacon {
+	uuid: string;
+	name: string;
+	rssi: number;
+}
+
+export class BeaconDiscover {
+	private delegate;
+    private devicesManager;
+	private callback: (beacons: Beacon[]) => void;
+
+    constructor(apiKey: string, callback: (beacons:Beacon[]) => void) {
+		this.callback = callback;
+		Kontakt.setAPIKey(apiKey);
+		this.delegate = KTKDevicesManagerDelegateImpl.new().initWithDiscover(this);
+		this.devicesManager = KTKDevicesManager.alloc().initWithDelegate(this.delegate);
+	}
+
+    discover(interval: number) {
+        this.devicesManager.startDevicesDiscoveryWithInterval(interval);
+        console.log('Start discovery', interval);
+    }
+
+    stopDiscover() {
+        this.devicesManager.stopDevicesDiscovery();
+    }
+}
+
+interface KTKDevicesManagerDelegate {
+	devicesManagerDidDiscoverDevices(manager, devices);
+    devicesManagerDidFailToStartDiscoveryWithError(manager, error);
+}
+
+class KTKDevicesManagerDelegateImpl extends NSObject implements KTKDevicesManagerDelegate {
+	public static ObjCProtocols = [KTKDevicesManagerDelegate];
+	private discover: BeaconDiscover;
+
+	static new(): KTKDevicesManagerDelegateImpl {
+		return <KTKDevicesManagerDelegateImpl>super.new();
+    }
+
+	public initWithDiscover(discover: BeaconDiscover): KTKDevicesManagerDelegateImpl {
+        this.discover = discover;
+        return this;
+    }
+
+	devicesManagerDidDiscoverDevices(manager, devices) {
+        console.log('Discover', devices.count);
+		const beaconsArray = new Array<BeaconWrapper>();
+		for (let i = 0; i < devices.count; i++) {
+			const _b = new BeaconWrapper(devices[i]);
+			beaconsArray.push(_b);
+			console.log('KTK', _b.toString());
+		}
+		//this.discover.pullBeacons(beaconsArray);
+	}
+
+    devicesManagerDidFailToStartDiscoveryWithError(manager, error) {
+        console.error(error);
+    }
+}
+
+class BeaconWrapper implements Beacon {
+	private raw: any;
+
+	constructor(raw) {
+		this.raw = raw;
+	}
+
+    get uuid() {
+		return this.raw.uniqueID;
+	}
+
+	get name() {
+		return this.raw.name;
+	}
+
+    get rssi() {
+        return this.raw.rssi;
+    }
+
+    public toString() {
+        return `${this.uuid} - ${this.name} - ${this.rssi}`;
+    }
+}

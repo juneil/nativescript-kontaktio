@@ -1,0 +1,11 @@
+android {
+  productFlavors {
+    "nativescript-kontaktio" {
+      dimension "nativescriptkontaktio"
+    }
+  }
+}
+
+dependencies {
+    compile 'com.kontaktio:sdk:3.2.0'
+}

@@ -1,0 +1,40 @@
+{
+  "name": "nativescript-kontaktio",
+  "version": "1.0.0",
+  "description": "NativeScript Plugin for Kontakt io Beacons",
+  "main": "index.js",
+  "typings": "index.d.ts",
+  "nativescript": {
+    "platforms": {
+      "android": "2.4.0",
+      "ios": "2.4.0"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd src && tsc -d --outDir ../"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Juneil/nativescript-kontaktio.git"
+  },
+  "keywords": [
+    "NativeScript",
+    "Kontakt",
+    "Beacon"
+  ],
+  "author": "Juneil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Juneil/nativescript-kontaktio/issues"
+  },
+  "homepage": "https://github.com/Juneil/nativescript-kontaktio#readme",
+  "dependencies": {
+    "nativescript-permissions": "^1.2.3"
+  },
+  "devDependencies": {
+    "tns-core-modules": "^2.5.0",
+    "tns-platform-declarations": "^2.5.0",
+    "typescript": "^2.1.5"
+  }
+}
